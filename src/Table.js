@@ -8,7 +8,8 @@ class Table extends Component {
       weightEntry: [
         {name: 'Fatty', weight: 463, date: '2020-03-01'},
         {name: 'Slim', weight: 130, date: '2019-09-10'},
-        {name: 'Anorexic', weight: 30, date: '2018-12-13'}
+        {name: 'Anorexic', weight: 30, date: '2018-12-13'},
+        {name: 'Average', weight: 148, date: '2020-06-21'}
       ]
     }
   }
