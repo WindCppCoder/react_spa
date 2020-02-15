@@ -1,0 +1,29 @@
+#title {
+  text-align: center;
+  font-family: arial, sans-serif;
+}
+
+#weightEntries {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border: 3px solid #ddd;
+  width: 100%;
+}
+
+#weightEntries td, #weightEntries th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#weightEntries tr:nth-child(even){background-color: #f2f2f2;}
+
+#weightEntries tr:hover {background-color: #ddd;}
+
+#weightEntries th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(137, 175, 182);
+  color: white;
+}
