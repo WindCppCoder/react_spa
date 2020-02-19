@@ -8,11 +8,22 @@ import Table from "./Table";
 import Login from "./Login";
  
 class Main extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            authLevel: 0,
+            username: "",
+
+        }
+    }
   render() {
     return (
         <HashRouter>
             <div>
-                <h1>Simple SPA</h1>
+                {this.state.username === "" ? 
+                    (<h1> Hello there, </h1>) 
+                    : <h1> Hello {this.state.username},</h1>
+                }
                 <ul className="header">
                     <li><NavLink exact to ="/">Home</NavLink></li>
                     <li><NavLink to ="/stuff">Stuff</NavLink></li>
@@ -20,7 +31,7 @@ class Main extends Component {
                     <li style={{"float":'right'}}> <NavLink to ="/login"> Login</NavLink></li>
                 </ul>
                 <div className="content">
-                    <Route exact path = "/" component = {Home}/>
+                    <Route exact path = "/" render = {(props) => <Home {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
                     <Route path = "/stuff" component = {Stuff}/>
                     <Route path = "/table" component = {Table}/>
                     <Route path = "/login" component = {Login}/>

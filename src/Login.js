@@ -24,10 +24,9 @@ class Login extends Component {
         this.state = {username: '',
                         password: '',
                         scrambled: '',
-                        loggedIn: false,
+                        //loggedIn: false,
                         showPopUp: false,
-                        authorization: "",
-                        userLevel: ""};
+                        authLevel: this.props.authLevel};
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -52,9 +51,9 @@ class Login extends Component {
               });
             }
             else {
-              this.setState({
+              /*this.setState({
                 loggedIn: true
-              });
+              });*/
               console.log(res.data.value);
             }
           },
