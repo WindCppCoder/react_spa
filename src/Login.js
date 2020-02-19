@@ -7,7 +7,10 @@ class Popup extends Component {
     return (
       <div className='popup'>
         <div className='popup_inner'>
-          <h1>{"Incorrect Username or Password"}</h1>
+          <h1>{"We could not find your username and password in our database."}</h1>
+          <li> If you would like to attempt to login again, please close this pop up with the 'Close' button. </li>
+          <li>  If you would like to create a new account, please choose the 'Create account' button.</li>
+        <button style={{float: 'left'}} onClick={this.props.createNew}>Create account</button>
         <button style={{float: 'right'}} onClick={this.props.closePopup}>Close</button>
         </div>
       </div>
@@ -30,10 +33,20 @@ class Login extends Component {
 
     loginUser() {
       let auth = require('./keys.json');
-      Object.assign(axios.defaults, { headers: {'user': auth[0].user, 'password': auth[0].key}});
-      axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "')")
+      //Object.assign(axios.defaults, { headers: {'user': auth[0].user, 'password': auth[0].key}});
+      //axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "'")
+      axios({
+        method: 'get',
+        url: "/users?$search='"+ this.state.username + "' AND '" + this.state.scrambled + "'",
+        baseURL: 'http://localhost:8153/api.rsc',
+        withCredentials: true,
+        auth: {
+          username: auth[0].user,
+          password: auth[0].key
+        }
+      })
           .then(res => {
-            if (res.data === ''){
+            if (res.data.value.length === 0){
               this.setState({
                 showPopUp: true
               });
@@ -42,6 +55,7 @@ class Login extends Component {
               this.setState({
                 loggedIn: true
               });
+              console.log(res.data.value);
             }
           },
           (error) => {
@@ -59,18 +73,19 @@ class Login extends Component {
     
     handleChange (event) {
         this.setState({ [event.target.name] : event.target.value });
-        this.setState({ [event.target.scrambled] : this.scramble(this.state.password) });
+        //this.setState({ [event.target.scrambled] : this.scramble(this.state.password) });
         //console.log(this.state.username);
         //console.log(this.state.password);
         //console.log(this.state.scrambled);
     }
 
     loginAttempt(event) {
+        this.scramble(this.state.password);
         event.preventDefault();
         this.loginUser();
-        console.log(this.state.username);
+        //console.log(this.state.username);
         console.log(this.state.scrambled);
-        console.log(this.state.loggedIn);
+        //console.log(this.state.loggedIn);
     }
 
     togglePopUp() {
@@ -78,6 +93,26 @@ class Login extends Component {
         showPopUp: !this.state.showPopUp
       });
     }
+
+    createAccount(){
+      let auth = require('./keys.json');
+      axios({
+        method: 'post',
+        url: "/users",
+        baseURL: 'http://localhost:8153/api.rsc',
+        withCredentials: true,
+        auth: {
+          username: auth[0].user,
+          password: auth[0].key
+        },
+        data: {
+          name: this.state.username,
+          scrambled_pass: this.state.scrambled
+        }
+      })
+      .then()
+    }
+
     render() {
       return (
         <form>
@@ -101,7 +136,7 @@ class Login extends Component {
             Login
         </button>
         {this.state.showPopUp ? 
-          <Popup closePopup={this.togglePopUp.bind(this)}/>
+          <Popup createNew ={this.createAccount.bind(this)} closePopup={this.togglePopUp.bind(this)}/>
           : null
         }
         </form>
