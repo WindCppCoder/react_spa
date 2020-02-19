@@ -40,7 +40,7 @@ class Table extends Component {
         <h1 id = 'title'>React Dynamic Table</h1>
         <table id ='weightEntries'>
           <tbody>
-            <tr> {this.renderTableHeader()} </tr>
+            <tr>{this.renderTableHeader()}</tr>
             {this.renderTableData()}
           </tbody>
         </table>

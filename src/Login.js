@@ -30,9 +30,8 @@ class Login extends Component {
 
     loginUser() {
       let auth = require('./keys.json');
-      console.log(auth[0]);
-      const creds = { headers: {'User': auth[0].user, 'Password': auth[0].key}};
-      axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "')", [ creds ])
+      Object.assign(axios.defaults, { headers: {'user': auth[0].user, 'password': auth[0].key}});
+      axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "')")
           .then(res => {
             if (res.data === ''){
               this.setState({
@@ -61,12 +60,13 @@ class Login extends Component {
     handleChange (event) {
         this.setState({ [event.target.name] : event.target.value });
         this.setState({ [event.target.scrambled] : this.scramble(this.state.password) });
-        console.log(this.state.username);
-        console.log(this.state.password);
-        console.log(this.state.scrambled);
+        //console.log(this.state.username);
+        //console.log(this.state.password);
+        //console.log(this.state.scrambled);
     }
 
-    loginAttempt() {
+    loginAttempt(event) {
+        event.preventDefault();
         this.loginUser();
         console.log(this.state.username);
         console.log(this.state.scrambled);
