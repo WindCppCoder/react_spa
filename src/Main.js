@@ -16,6 +16,18 @@ class Main extends Component {
 
         }
     }
+
+    callbackForUser = (userData) => {
+        this.setState({
+            username: userData
+        });
+    }
+
+    callbackForAuth = (levelData) => {
+        this.setState({
+            authLevel: levelData
+        });
+    }
   render() {
     return (
         <HashRouter>
@@ -32,9 +44,9 @@ class Main extends Component {
                 </ul>
                 <div className="content">
                     <Route exact path = "/" render = {(props) => <Home {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
-                    <Route path = "/stuff" component = {Stuff}/>
-                    <Route path = "/table" component = {Table}/>
-                    <Route path = "/login" component = {Login}/>
+                    <Route path = "/stuff" render = {(props) => <Stuff {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
+                    <Route path = "/table" render = {(props) => <Table {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
+                    <Route path = "/login" render = {(props) => <Login {...props} authLevel={this.state.authLevel} username={this.state.username} callbackUser={this.callbackForUser} callbackAuth={this.callbackForAuth}/>} />
                 </div>
             </div>
         </HashRouter>

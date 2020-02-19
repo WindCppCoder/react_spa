@@ -40,8 +40,8 @@ class Login extends Component {
         baseURL: 'http://localhost:8153/api.rsc',
         withCredentials: true,
         auth: {
-          username: auth[0].user,
-          password: auth[0].key
+          username: auth[this.state.authLevel].user,
+          password: auth[this.state.authLevel].key
         }
       })
           .then(res => {
@@ -54,6 +54,11 @@ class Login extends Component {
               /*this.setState({
                 loggedIn: true
               });*/
+              this.setState({
+                authLevel: 1
+              });
+              this.props.callbackUser(this.state.username);
+              this.props.callbackAuth(this.state.authLevel);
               console.log(res.data.value);
             }
           },
