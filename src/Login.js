@@ -30,23 +30,24 @@ class Login extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    loginUser() {
+    loginUser(origin) {
       let auth = require('./keys.json');
       //Object.assign(axios.defaults, { headers: {'user': auth[0].user, 'password': auth[0].key}});
       //axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "'")
+      console.log(origin.state.scrambled);
       axios({
         method: 'get',
-        url: "/users?$search='"+ this.state.username + "' AND '" + this.state.scrambled + "'",
+        url: "/users?$search='"+ origin.state.username + "' AND '" + origin.state.scrambled + "'",
         baseURL: 'http://localhost:8153/api.rsc',
         withCredentials: true,
         auth: {
-          username: auth[this.state.authLevel].user,
-          password: auth[this.state.authLevel].key
+          username: auth[origin.state.authLevel].user,
+          password: auth[origin.state.authLevel].key
         }
       })
           .then(res => {
             if (res.data.value.length === 0){
-              this.setState({
+              origin.setState({
                 showPopUp: true
               });
             }
@@ -54,11 +55,11 @@ class Login extends Component {
               /*this.setState({
                 loggedIn: true
               });*/
-              this.setState({
+              origin.setState({
                 authLevel: 1
               });
-              this.props.callbackUser(this.state.username);
-              this.props.callbackAuth(this.state.authLevel);
+              origin.props.callbackUser(origin.state.username);
+              origin.props.callbackAuth(origin.state.authLevel);
               console.log(res.data.value);
             }
           },
@@ -68,27 +69,32 @@ class Login extends Component {
           
     }
 
-    scramble(pass){
+    scramble(pass, login, origin){
       var temp = Base64.encode(pass);
-      this.setState({
+      origin.setState({
         scrambled: temp
+      }, () => {
+          login(origin)
       });
+      
     }
     
     handleChange (event) {
-        this.setState({ [event.target.name] : event.target.value });
-        //this.setState({ [event.target.scrambled] : this.scramble(this.state.password) });
+        this.setState({ 
+          [event.target.name] : event.target.value 
+        });
+        //this.setState({ [event.target.scrambled] : this.scramble(this.state.password) }); //this one only gets called on changes; hence will always be 1 action off
         //console.log(this.state.username);
         //console.log(this.state.password);
         //console.log(this.state.scrambled);
     }
 
     loginAttempt(event) {
-        this.scramble(this.state.password);
         event.preventDefault();
-        this.loginUser();
+        this.scramble(this.state.password, this.loginUser, this);
+        //this.loginUser();
         //console.log(this.state.username);
-        console.log(this.state.scrambled);
+        //console.log(this.state.scrambled);
         //console.log(this.state.loggedIn);
     }
 
