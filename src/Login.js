@@ -18,23 +18,36 @@ class Popup extends Component {
   }
 }
 
+class Deletion extends Component {
+  render() {
+    return (
+      <div className='popup'>
+        <div className='popup_inner'>
+          <h1>
+            Please confirm your wish to delete {this.props.name}
+          </h1>
+          <button onClick={this.props.confirm}> Confirm Deletion</button>
+        </div>
+      </div>
+    );
+  }
+}
+
 class Login extends Component {
     constructor(props){
         super(props);
-        this.state = {username: '',
+        this.state = {username: this.props.username,
                         password: '',
-                        scrambled: '',
-                        //loggedIn: false,
+                        scrambled: this.props.scrambled,
+                        id: this.props.ID,
                         showPopUp: false,
+                        showDelete: false,
                         authLevel: this.props.authLevel};
         this.handleChange = this.handleChange.bind(this);
     }
 
     loginUser(origin) {
       let auth = require('./keys.json');
-      //Object.assign(axios.defaults, { headers: {'user': auth[0].user, 'password': auth[0].key}});
-      //axios.get("http://localhost:8153/api.rsc/users?$search= '" + this.state.username + "' AND '" + this.state.scrambled + "'")
-      console.log(origin.state.scrambled);
       axios({
         method: 'get',
         url: "/users?$search='"+ origin.state.username + "' AND '" + origin.state.scrambled + "'",
@@ -56,10 +69,15 @@ class Login extends Component {
                 loggedIn: true
               });*/
               origin.setState({
-                authLevel: 1
-              });
-              origin.props.callbackUser(origin.state.username);
+                authLevel: 1,
+                id: res.data.value[0].ID
+              }, () => {
               origin.props.callbackAuth(origin.state.authLevel);
+              origin.props.callbackID(origin.state.id);
+              origin.props.callbackUser(origin.state.username);
+              origin.props.callbackScram(origin.state.scrambled);
+              });              
+
               console.log(res.data.value);
               origin.props.history.push('/')
             }
@@ -69,6 +87,8 @@ class Login extends Component {
           })
           
     }
+
+
 
     scramble(pass, login, origin){
       var temp = Base64.encode(pass);
@@ -92,6 +112,9 @@ class Login extends Component {
 
     loginAttempt(event) {
         event.preventDefault();
+        if(this.state.username === "" || this.state.password === ""){
+          return;
+        }
         this.scramble(this.state.password, this.loginUser, this);
         //this.loginUser();
         //console.log(this.state.username);
@@ -122,14 +145,33 @@ class Login extends Component {
         }
       })
       .then(res => {
-        /*this.setState({
-          loggedIn: true
-        });*/
         this.setState({
           authLevel: 1
         });
-        this.props.callbackUser(this.state.username);
-        this.props.callbackAuth(this.state.authLevel);
+      },
+      (error) => {
+        console.log(error);
+      })
+
+      axios({
+        method: 'get',
+        url: "/users?$search='"+ this.state.username + "' AND '" + this.state.scrambled + "'",
+        baseURL: 'http://localhost:8153/api.rsc',
+        withCredentials: true,
+        auth: {
+          username: auth[this.state.authLevel].user,
+          password: auth[this.state.authLevel].key
+        }
+      })
+      .then(res => {
+        this.setState({
+          id: res.data.value[0].ID
+        }, () => {
+          this.props.callbackUser(this.state.username);
+          this.props.callbackAuth(this.state.authLevel);
+          this.props.callbackID(this.state.id);
+          this.props.callbackScram(this.state.scrambled);
+        });
         console.log(res.data.value);
         this.props.history.push('/')
       },
@@ -143,12 +185,56 @@ class Login extends Component {
         username: '',
         password: '',
         scrambled: '',
-        authLevel: 0
+        authLevel: 0,
+        id: 0
       });
       this.props.callbackAuth(0);
       this.props.callbackUser('');
+      this.props.callbackScram('');
+      this.props.callbackID(0);
     }
 
+    deleteAccount(){
+        let auth = require('./keys.json');
+        axios({
+          method: 'delete',
+          url: "/users",
+          baseURL: 'http://localhost:8153/api.rsc',
+          withCredentials: true,
+          auth: {
+            username: auth[this.state.authLevel].user,
+            password: auth[this.state.authLevel].key
+          },
+          params: {
+            ID: this.state.id,
+            name: this.state.username,
+            scrambled_pass: this.state.scrambled
+          }
+        })
+        .then(res => {
+          this.setState({
+            username: '',
+            password: '',
+            scrambled: '',
+            authLevel: 0
+          });
+          this.props.callbackAuth(0);
+          this.props.callbackUser('');
+          this.props.callbackID(0);
+          this.props.callbackScram('');
+          this.toggleDelete();
+        },
+        (error) => {
+          console.log(error);
+        })
+    }
+
+    toggleDelete(){
+      this.setState({
+        showDelete: !this.state.showDelete
+      });
+    }
+    
     render() {
       if (this.props.authLevel >= 1){
         return (
@@ -158,6 +244,14 @@ class Login extends Component {
 
             <button onClick={this.logout.bind(this)}>
               Logout
+            </button>
+
+            <br/>
+            <h2>
+              If you wish to delete your account and all its associated information, please select the 'Delete' button.
+            </h2>
+            <button onClick={this.toggleDelete.bind(this)}>
+              Delete
             </button>
           </div>
         )
@@ -185,6 +279,11 @@ class Login extends Component {
         </button>
         {this.state.showPopUp ? 
           <Popup createNew ={this.createAccount.bind(this)} closePopup={this.togglePopUp.bind(this)}/>
+          : null
+        }
+
+        {this.state.showDelete ?
+          <Deletion name={this.state.username} confirm={this.deleteAccount.bind(this)}/> 
           : null
         }
         </form>

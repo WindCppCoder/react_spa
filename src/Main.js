@@ -13,7 +13,8 @@ class Main extends Component {
         this.state = {
             authLevel: 0,
             username: "",
-
+            scrambled: "",
+            id: 0
         }
     }
 
@@ -26,6 +27,18 @@ class Main extends Component {
     callbackForAuth = (levelData) => {
         this.setState({
             authLevel: levelData
+        });
+    }
+
+    callbackForID = (idData) =>{
+        this.setState({
+            id: idData
+        });
+    }
+
+    callbackForScram = (scramData) => {
+        this.setState({
+            scrambled: scramData
         });
     }
   render() {
@@ -45,8 +58,11 @@ class Main extends Component {
                 <div className="content">
                     <Route exact path = "/" render = {(props) => <Home {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
                     <Route path = "/stuff" render = {(props) => <Stuff {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
-                    <Route path = "/table" render = {(props) => <Table {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
-                    <Route path = "/login" render = {(props) => <Login {...props} authLevel={this.state.authLevel} username={this.state.username} callbackUser={this.callbackForUser} callbackAuth={this.callbackForAuth}/>} />
+                    <Route path = "/table" render = {(props) => <Table {...props} authLevel={this.state.authLevel} username={this.state.username} 
+                        id={this.state.id}/>} />
+                    <Route path = "/login" render = {(props) => <Login {...props} authLevel={this.state.authLevel} username={this.state.username} 
+                        id={this.state.id} scrambled={this.state.scrambled} callbackUser={this.callbackForUser} callbackAuth={this.callbackForAuth} 
+                        callbackID={this.callbackForID} callbackScram={this.callbackForScram}/>} />
                 </div>
             </div>
         </HashRouter>
