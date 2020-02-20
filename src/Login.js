@@ -61,6 +61,7 @@ class Login extends Component {
               origin.props.callbackUser(origin.state.username);
               origin.props.callbackAuth(origin.state.authLevel);
               console.log(res.data.value);
+              origin.props.history.push('/')
             }
           },
           (error) => {
@@ -120,10 +121,47 @@ class Login extends Component {
           scrambled_pass: this.state.scrambled
         }
       })
-      .then()
+      .then(res => {
+        /*this.setState({
+          loggedIn: true
+        });*/
+        this.setState({
+          authLevel: 1
+        });
+        this.props.callbackUser(this.state.username);
+        this.props.callbackAuth(this.state.authLevel);
+        console.log(res.data.value);
+        this.props.history.push('/')
+      },
+      (error) => {
+        console.log(error);
+      })
+    }
+
+    logout(){
+      this.setState({
+        username: '',
+        password: '',
+        scrambled: '',
+        authLevel: 0
+      });
+      this.props.callbackAuth(0);
+      this.props.callbackUser('');
     }
 
     render() {
+      if (this.props.authLevel >= 1){
+        return (
+          <div>
+            <h1> User {this.props.username} is already signed in. 
+            <br/> Please logout and login to the account you wish to use.</h1>
+
+            <button onClick={this.logout.bind(this)}>
+              Logout
+            </button>
+          </div>
+        )
+      }
       return (
         <form>
           <h1>Hello</h1>

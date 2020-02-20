@@ -40,7 +40,7 @@ class Main extends Component {
                     <li><NavLink exact to ="/">Home</NavLink></li>
                     <li><NavLink to ="/stuff">Stuff</NavLink></li>
                     <li><NavLink to ="/table">Table</NavLink></li>
-                    <li style={{"float":'right'}}> <NavLink to ="/login"> Login</NavLink></li>
+                    <li style={{"float":'right'}}> <NavLink to ="/login"> Login/Logout</NavLink></li>
                 </ul>
                 <div className="content">
                     <Route exact path = "/" render = {(props) => <Home {...props} authLevel={this.state.authLevel} username={this.state.username}/>} />
