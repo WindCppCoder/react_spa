@@ -21,8 +21,8 @@ class Popup extends Component {
 class Deletion extends Component {
   render() {
     return (
-      <div className='popup'>
-        <div className='popup_inner'>
+      <div className='deletion'>
+        <div className='deletion_inner'>
           <h1>
             Please confirm your wish to delete {this.props.name}
           </h1>
@@ -194,7 +194,9 @@ class Login extends Component {
       this.props.callbackID(0);
     }
 
-    deleteAccount(){
+    deleteAccount(event){
+      event.preventDefault();
+      console.log(this.props.id); //for some reason, as yet unknown, this.state.id is undefined but this.props.id is good and correct.
         let auth = require('./keys.json');
         axios({
           method: 'delete',
@@ -206,7 +208,7 @@ class Login extends Component {
             password: auth[this.state.authLevel].key
           },
           params: {
-            ID: this.state.id,
+            ID: this.props.id,
             name: this.state.username,
             scrambled_pass: this.state.scrambled
           }
@@ -233,6 +235,7 @@ class Login extends Component {
       this.setState({
         showDelete: !this.state.showDelete
       });
+      console.log("I made it to handler toggleDelete");
     }
     
     render() {
@@ -253,6 +256,10 @@ class Login extends Component {
             <button onClick={this.toggleDelete.bind(this)}>
               Delete
             </button>
+            {this.state.showDelete ?
+              <Deletion name={this.state.username} origin={this} confirm={this.deleteAccount.bind(this)}/> 
+              : null
+            }
           </div>
         )
       }
@@ -277,6 +284,7 @@ class Login extends Component {
         <button onClick={this.loginAttempt.bind(this)}>
             Login
         </button>
+        
         {this.state.showPopUp ? 
           <Popup createNew ={this.createAccount.bind(this)} closePopup={this.togglePopUp.bind(this)}/>
           : null

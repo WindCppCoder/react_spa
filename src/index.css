@@ -57,3 +57,24 @@ ul.header li a {
   margin: auto;
   background: white;
 }
+
+.deletion {
+  position: fixed;
+  width: 50%;
+  height: 50%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0,0,0, 0.5);
+}
+.deletion_inner {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 5%;
+  bottom: 5%;
+  margin: auto;
+  background: red;
+}
