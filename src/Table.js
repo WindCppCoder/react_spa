@@ -8,16 +8,16 @@ class Table extends Component {
     super(props)
     
     this.state = {
-      //username: this.props.username,
-      //id: this.props.id,
-      //authLevel: this.props.authLevel,
+      weight: 0,
+      date: "",
       weightEntry: [
         {name: 'Fatty', weight: 463, date: '2020-03-01'},
         {name: 'Slim', weight: 130, date: '2019-09-10'},
         {name: 'Anorexic', weight: 30, date: '2018-12-13'},
         {name: 'Average', weight: 148, date: '2020-06-21'}
       ]
-    }
+    };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount(){
@@ -66,6 +66,39 @@ class Table extends Component {
         })
   }
 
+  createEntry(event){
+    event.preventDefault();
+    let auth = require('./keys.json');
+    axios({
+      method: 'post',
+      url: "/records",
+      baseURL: 'http://localhost:8153/api.rsc',
+      withCredentials: true,
+      auth: {
+        username: auth[this.props.authLevel].user,
+        password: auth[this.props.authLevel].key
+      },
+      data: {
+        name: this.props.username,
+        date: this.state.date,
+        weight: this.state.weight,
+        ID: this.props.id
+      }
+    })
+    .then(res => {
+      this.getHistory();
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  handleChange (event) {
+    this.setState({ 
+      [event.target.name] : event.target.value 
+    });
+  }
+  
   renderTableData(){
     return this.state.weightEntry.map((weightEntry, index) => {
       const {name, weight, date} = weightEntry
@@ -101,12 +134,27 @@ class Table extends Component {
     else  {
       if (this.state.weightEntry === null){
         return(
-          <h1> You have no entries, why not start keeping track?</h1>
+          <form>
+            <h1> You have no entries, why not start keeping track?</h1>
+            <li> Please fill out the forms below with a weight and date </li>
+            <p> Weight: Please do not use negative numbers<br/></p> 
+            <input type = "number" name = "weight"
+              onChange = {this.handleChange}
+            />
+            <p> Date: Please use format 'YYYY-MM-DD'<br/></p>
+            <input type = "text" name = "date"
+              onChange = {this.handleChange}
+            />
+            <br/>
+            <button onClick={this.createEntry.bind(this)}>
+              Post (click only once)
+            </button>
+          </form>
         )
       }
       else {
         return (
-          <div>
+          <form>
             <h1 id = 'title'>React Dynamic Table</h1>
             <table id ='weightEntries'>
               <tbody>
@@ -114,7 +162,19 @@ class Table extends Component {
                 {this.renderTableData()}
               </tbody>
             </table>
-          </div>
+            <p> Weight: Please do not use negative numbers<br/></p> 
+            <input type = "number" name = "weight"
+              onChange = {this.handleChange}
+            />
+            <p> Date: Please use format 'YYYY-MM-DD'<br/></p>
+            <input type = "text" name = "date"
+              onChange = {this.handleChange}
+            />
+            <br/>
+            <button onClick={this.createEntry.bind(this)}>
+              Post (click only once)
+            </button>
+          </form>
         )
       }
     }
