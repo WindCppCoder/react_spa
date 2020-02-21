@@ -285,14 +285,12 @@ class Login extends Component {
         <button onClick={this.loginAttempt.bind(this)}>
             Login
         </button>
+
+        <br/>
+        <p> If you wish to create an account, please enter a name and password</p>
         
         {this.state.showPopUp ? 
           <Popup createNew ={this.createAccount.bind(this)} closePopup={this.togglePopUp.bind(this)}/>
-          : null
-        }
-
-        {this.state.showDelete ?
-          <Deletion name={this.state.username} confirm={this.deleteAccount.bind(this)}/> 
           : null
         }
         </form>
