@@ -17,7 +17,6 @@ type LoginState = {
 
 type LoginProps = {
   username: string;
-  password?: string;
   scrambled: string;
   id: number;
   authLevel: number;
@@ -40,7 +39,8 @@ class Login extends Component<LoginProps, LoginState> {
       showDelete: false,
       authLevel: this.props.authLevel
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
   loginUser(origin: any) {
@@ -100,10 +100,16 @@ class Login extends Component<LoginProps, LoginState> {
     );
   }
 
-  handleChange(event: any) {
-    // this.setState({
-    //   [event.target.name]: event.target.value
-    // });
+  handleUsernameChange(event: any) {
+    this.setState({
+      username: event.target.value
+    });
+  }
+
+  handlePasswordChange(event: any) {
+    this.setState({
+      password: event.target.value
+    });
   }
 
   loginAttempt(event: any) {
@@ -273,12 +279,20 @@ class Login extends Component<LoginProps, LoginState> {
         <label>
           Username: <br />
         </label>
-        <input type="text" name="username" onChange={this.handleChange} />
+        <input
+          type="text"
+          name="username"
+          onChange={this.handleUsernameChange}
+        />
         <br />
         <label>
           Password: <br />
         </label>
-        <input type="password" name="password" onChange={this.handleChange} />
+        <input
+          type="password"
+          name="password"
+          onChange={this.handlePasswordChange}
+        />
 
         <br />
 
