@@ -7,7 +7,7 @@ type TableState = {
   weight: number;
   date: string;
   weightEntry: { name: string; weight: number; date: string }[] | null;
-  authLevel: number;
+
 };
 
 type TableProps = {
@@ -32,7 +32,6 @@ class Table extends Component<TableProps, TableState> {
         { name: "Anorexic", weight: 30, date: "2018-12-13" },
         { name: "Average", weight: 148, date: "2020-06-21" }
       ],
-      authLevel: this.props.authLevel
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleWeightChange = this.handleWeightChange.bind(this);
@@ -95,8 +94,8 @@ class Table extends Component<TableProps, TableState> {
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
-        username: auth[this.state.authLevel].user,
-        password: auth[this.state.authLevel].key
+        username: auth[this.props.authLevel].user,
+        password: auth[this.props.authLevel].key
       },
       params: {
         ID: this.props.id,
