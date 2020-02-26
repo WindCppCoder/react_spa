@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./table.css";
 import axios from "axios";
+import { observer } from "mobx-react";
  
 class Table extends Component {
   _isMounted = false;

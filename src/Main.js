@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import{
     Route, NavLink, HashRouter
 } from "react-router-dom";
+import {decorate, observable} from "mobx";
+import {observer} from "mobx-react";
 import Home from "./Home";
 import Stuff from "./Stuff";
 import Table from "./Table";
@@ -10,7 +12,7 @@ import Login from "./Login";
 class Main extends Component {
     constructor(props) {
         super(props);
-        this.state = {
+        @observable this.state = {
             authLevel: 0,
             username: "",
             scrambled: "",

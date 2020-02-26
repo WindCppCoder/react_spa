@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import {Base64} from 'js-base64';
+import { observer } from "mobx-react";
 //*** the code is kinda ugly ***//
 
 class Popup extends Component {
@@ -34,6 +35,7 @@ class Deletion extends Component {
   }
 }
 
+@observer
 class Login extends Component {
     constructor(props){
         super(props);
@@ -66,9 +68,6 @@ class Login extends Component {
               });
             }
             else {
-              /*this.setState({
-                loggedIn: true
-              });*/
               origin.setState({
                 authLevel: 1,
                 id: res.data.value[0].ID
@@ -105,10 +104,6 @@ class Login extends Component {
         this.setState({ 
           [event.target.name] : event.target.value 
         });
-        //this.setState({ [event.target.scrambled] : this.scramble(this.state.password) }); //this one only gets called on changes; hence will always be 1 action off
-        //console.log(this.state.username);
-        //console.log(this.state.password);
-        //console.log(this.state.scrambled);
     }
 
     loginAttempt(event) {
@@ -117,10 +112,6 @@ class Login extends Component {
           return;
         }
         this.scramble(this.state.password, this.loginUser, this);
-        //this.loginUser();
-        //console.log(this.state.username);
-        //console.log(this.state.scrambled);
-        //console.log(this.state.loggedIn);
     }
 
     togglePopUp() {
