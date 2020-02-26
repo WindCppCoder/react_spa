@@ -88,7 +88,7 @@ class Login extends Component<LoginProps, LoginState> {
     );
   }
 
-  scramble(pass: any, login: any, origin: any) {
+  scramble(pass: string, login: any, origin: any) {
     var temp = Base64.encode(pass);
     origin.setState(
       {

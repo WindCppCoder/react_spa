@@ -34,7 +34,8 @@ class Table extends Component<TableProps, TableState> {
       ],
       authLevel: this.props.authLevel
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleWeightChange = this.handleWeightChange.bind(this);
   }
 
   componentDidMount() {
@@ -85,8 +86,8 @@ class Table extends Component<TableProps, TableState> {
       }
     );
   }
-
-  deleteAccount(event: any) {
+////incomplete function
+  deleteEntry(event: any) {
     event.preventDefault();
     axios({
       method: "delete",
@@ -132,10 +133,16 @@ class Table extends Component<TableProps, TableState> {
     );
   }
 
-  handleChange(event: any) {
-    // this.setState({
-    //   [event.target.name]: event.target.value
-    // });
+  handleWeightChange(event: any) {
+    this.setState({
+      weight: event.target.value
+    });
+  }
+
+  handleDateChange(event: any) {
+    this.setState({
+      date: event.target.value
+    });
   }
 
   renderTableData() {
@@ -184,12 +191,12 @@ class Table extends Component<TableProps, TableState> {
               Weight: Please do not use negative numbers
               <br />
             </p>
-            <input type="number" name="weight" onChange={this.handleChange} />
+            <input type="number" name="weight" onChange={this.handleWeightChange} />
             <p>
               Date: Please use format 'YYYY-MM-DD'
               <br />
             </p>
-            <input type="text" name="date" onChange={this.handleChange} />
+            <input type="text" name="date" onChange={this.handleDateChange} />
             <br />
             <button onClick={this.createEntry.bind(this)}>
               Post (click only once)
@@ -210,12 +217,12 @@ class Table extends Component<TableProps, TableState> {
               Weight: Please do not use negative numbers
               <br />
             </p>
-            <input type="number" name="weight" onChange={this.handleChange} />
+            <input type="number" name="weight" onChange={this.handleWeightChange} />
             <p>
               Date: Please use format 'YYYY-MM-DD'
               <br />
             </p>
-            <input type="text" name="date" onChange={this.handleChange} />
+            <input type="text" name="date" onChange={this.handleDateChange} />
             <br />
             <button onClick={this.createEntry.bind(this)}>
               Post (click only once)
