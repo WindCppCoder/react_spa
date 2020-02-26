@@ -66,6 +66,26 @@ class Table extends Component {
         })
   }
 
+  deleteAccount(event){
+    event.preventDefault();
+      let auth = require('./keys.json');
+      axios({
+        method: 'delete',
+        url: "/records",
+        baseURL: 'http://localhost:8153/api.rsc',
+        withCredentials: true,
+        auth: {
+          username: auth[this.state.authLevel].user,
+          password: auth[this.state.authLevel].key
+        },
+        params: {
+          ID: this.props.id,
+          name: this.props.username,
+          //weight and date are needed to specify a single post to delete; figure out how to pass along information of a row on click
+        }
+      })
+  }
+
   createEntry(event){
     event.preventDefault();
     let auth = require('./keys.json');
