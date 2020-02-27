@@ -150,7 +150,7 @@ class Table extends Component<TableProps, TableState> {
       this.state.weightEntry.map((weightEntry, index) => {
         const { name, weight, date } = weightEntry;
         return (
-          <tr key={date}>
+          <tr key={date} onClick={this.returnRowData.bind({name, weight, date})} >
             <td> {name} </td>
             <td> {weight} </td>
             <td> {date} </td>
@@ -167,6 +167,11 @@ class Table extends Component<TableProps, TableState> {
         return <th key={index}> {key.toUpperCase()}</th>;
       })
     );
+  }
+
+  returnRowData(event: any){
+    event.preventDefault();
+    console.log(this); //the 'this' insize () is pointing towards the row's array of {name, weight, date} not towards the Table class
   }
 
   render() {
