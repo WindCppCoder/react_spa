@@ -174,7 +174,7 @@ class Login extends Component<LoginProps, LoginState> {
           () => {
             this.props.callbackUser(this.state.username);
             this.props.callbackAuth(this.state.authLevel);
-            this.props.callbackID(this.state.id);
+            this.props.callbackID(res.data.value[0].ID);
             this.props.callbackScram(this.state.scrambled);
           }
         );
