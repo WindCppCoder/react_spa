@@ -6,6 +6,8 @@ const auth = require("../keys.json");
 type TableState = {
   weight: number;
   date: string;
+  deleteMode: boolean;
+  editMode: boolean;
   weightEntry: { name: string; weight: number; date: string }[] | null;
 
 };
@@ -26,6 +28,8 @@ class Table extends Component<TableProps, TableState> {
     this.state = {
       weight: 0,
       date: "",
+      deleteMode: false,
+      editMode: false,
       weightEntry: [
         { name: "Fatty", weight: 463, date: "2020-03-01" },
         { name: "Slim", weight: 130, date: "2019-09-10" },
@@ -85,9 +89,9 @@ class Table extends Component<TableProps, TableState> {
       }
     );
   }
-////incomplete function
-  deleteEntry(event: any) {
-    event.preventDefault();
+////incomplete function - error 400, bad request
+  deleteEntry( row: any) {
+    //event.preventDefault();
     axios({
       method: "delete",
       url: "/records",
@@ -99,10 +103,26 @@ class Table extends Component<TableProps, TableState> {
       },
       params: {
         ID: this.props.id,
-        name: this.props.username
+        name: this.props.username,
         //weight and date are needed to specify a single post to delete; figure out how to pass along information of a row on click
+        weight: row.weight,
+        date: row.date
+
       }
-    });
+    }).then(
+      res => {
+        this.toggleDelete();
+        this.getHistory();
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  //incomplete function
+  editEntry( row: any){
+
   }
 
   createEntry(event: any) {
@@ -150,7 +170,7 @@ class Table extends Component<TableProps, TableState> {
       this.state.weightEntry.map((weightEntry, index) => {
         const { name, weight, date } = weightEntry;
         return (
-          <tr key={date} onClick={this.returnRowData.bind({name, weight, date})} >
+          <tr key={date} onClick={this.returnRowData.bind(this, {name, weight, date})} >
             <td> {name} </td>
             <td> {weight} </td>
             <td> {date} </td>
@@ -169,9 +189,28 @@ class Table extends Component<TableProps, TableState> {
     );
   }
 
-  returnRowData(event: any){
-    event.preventDefault();
-    console.log(this); //the 'this' insize () is pointing towards the row's array of {name, weight, date} not towards the Table class
+  returnRowData(array: any){
+    //event.preventDefault();
+    console.log(array);
+    console.log(this); //the 'this' inside () is pointing towards the row's array of {name, weight, date} not towards the Table class
+    if (this.state.deleteMode){
+      this.deleteEntry(array);
+    }
+    else if (this.state.editMode){
+      this.editEntry(array); //must have input boxes filled to replace the contents of array.
+    }
+  }
+
+  toggleDelete(){
+    this.setState({
+      deleteMode: !this.state.deleteMode
+    });
+  }
+
+  toggleEdit(){
+    this.setState({
+      editMode: !this.state.editMode
+    });
   }
 
   render() {
@@ -231,6 +270,19 @@ class Table extends Component<TableProps, TableState> {
             <button onClick={this.createEntry.bind(this)}>
               Post (click only once)
             </button>
+
+            <button style={{"float": "right"}} onClick={ this.toggleDelete.bind(this)}>
+              Delete Mode
+            </button>
+
+            <button style={{"float": "right"}} onClick={ this.toggleEdit.bind(this)}>
+              Edit Mode
+            </button>
+            <br/>
+            <small>
+              After clicking Delete Mode, simply click on the row you wish to delete. <br/>
+              After clicking Edit Mode, simply type in the corrected information into the date and weight boxes above, then select the row it is meant to edit.
+            </small>
           </form>
         );
       }
