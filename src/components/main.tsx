@@ -62,9 +62,6 @@ class Main extends Component<{}, MainState> {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/stuff">Stuff</NavLink>
-            </li>
-            <li>
               <NavLink to="/table">Table</NavLink>
             </li>
             <li style={{ float: "right" }}>
