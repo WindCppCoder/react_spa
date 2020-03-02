@@ -110,7 +110,6 @@ class Table extends Component<TableProps, TableState> {
       }
     }).then(
       res => {
-        //this.toggleDelete(event);
         this.getHistory();
       },
       error => {
@@ -119,12 +118,7 @@ class Table extends Component<TableProps, TableState> {
     );
   }
 
-  //incomplete function
   editEntry( row: any){
-    //const tempDate = new Moment(row.date).props;
-    //const tempDate = new Date(row.date);
-    console.log(row.date);
-    console.log(this.state.date);
     axios({
       method: "put",
       url: "/records",
@@ -150,7 +144,6 @@ class Table extends Component<TableProps, TableState> {
       }
     }).then(
       res => {
-        //this.toggleEdit(event);
         this.getHistory();
       },
       error => {
@@ -230,7 +223,7 @@ class Table extends Component<TableProps, TableState> {
     if (this.state.deleteMode){
       this.deleteEntry(array);
     }
-    else if (this.state.editMode){
+    else if (this.state.editMode && (this.state.weight !== 0 && this.state.date !== "")){
       this.editEntry(array); //must have input boxes filled to replace the contents of array. implement this requirement
     }
   }

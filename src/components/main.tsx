@@ -21,6 +21,25 @@ class Main extends Component<{}, MainState> {
       id: 0
     };
   }
+  
+  storeSession = () => {
+    const { authLevel, username, scrambled, id} = this.state;
+    sessionStorage.setItem('authLevel', JSON.stringify(authLevel));
+    sessionStorage.setItem('username', authLevel === 1 ? username : '');
+    sessionStorage.setItem('scrambled', authLevel === 1 ? scrambled : '');
+    sessionStorage.setItem('id', authLevel === 1 ? JSON.stringify(id) : '');
+  }
+
+  /*componentDidMount(){
+    const authority = sessionStorage.getItem('authLevel') === '1';
+    const username = authority ? sessionStorage.getItem('username') : '';
+    const scrambled = authority ? sessionStorage.getItem('scrambled') : '';
+    const id = authority ? sessionStorage.getItem('id') : 0;
+    const authLevel = 1;
+      this.setState({
+        authLevel, username, scrambled, id
+      });
+  }*/
 
   callbackForUser = (username: string) => {
     this.setState({
@@ -104,6 +123,7 @@ class Main extends Component<{}, MainState> {
                   callbackAuth={this.callbackForAuth}
                   callbackID={this.callbackForID}
                   callbackScram={this.callbackForScram}
+                  storeSession={this.storeSession}
                 />
               )}
             />
