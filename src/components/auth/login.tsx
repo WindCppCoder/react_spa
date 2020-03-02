@@ -203,7 +203,6 @@ class Login extends Component<LoginProps, LoginState> {
 
   deleteAccount(event: any) {
     event.preventDefault();
-    console.log(this.props.id); //for some reason, as yet unknown, this.state.id is undefined but this.props.id is good and correct.
     axios({
       method: "delete",
       url: "/users",
@@ -214,7 +213,7 @@ class Login extends Component<LoginProps, LoginState> {
         password: auth[this.state.authLevel].key
       },
       params: {
-        ID: this.props.id,
+        ID: this.state.id,
         name: this.state.username,
         scrambled_pass: this.state.scrambled
       }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../style/table.css";
 import axios from "axios";
+import Moment from "react-moment";
 const auth = require("../keys.json");
 
 type TableState = {
@@ -56,7 +57,7 @@ class Table extends Component<TableProps, TableState> {
   getHistory() {
     axios({
       method: "get",
-      url: "/records/?$search=" + this.props.id,
+      url: "/records/?$filter=ID eq " + this.props.id,
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
@@ -91,7 +92,9 @@ class Table extends Component<TableProps, TableState> {
   }
 ////incomplete function - error 400, bad request
   deleteEntry( row: any) {
-    //event.preventDefault();
+    const tempDate = new Moment(row.date).props;
+    //const tempDate = new Date(row.date);
+    console.log(tempDate);
     axios({
       method: "delete",
       url: "/records",
@@ -102,12 +105,12 @@ class Table extends Component<TableProps, TableState> {
         password: auth[this.props.authLevel].key
       },
       params: {
+        
         ID: this.props.id,
         name: this.props.username,
         //weight and date are needed to specify a single post to delete; figure out how to pass along information of a row on click
         weight: row.weight,
-        date: row.date
-
+        date: tempDate
       }
     }).then(
       res => {
@@ -122,7 +125,42 @@ class Table extends Component<TableProps, TableState> {
 
   //incomplete function
   editEntry( row: any){
-
+    //const tempDate = new Moment(row.date).props;
+    //const tempDate = new Date(row.date);
+    console.log(row.date);
+    console.log(this.state.date);
+    axios({
+      method: "put",
+      url: "/records",
+      baseURL: "http://localhost:8153/api.rsc",
+      withCredentials: true,
+      auth: {
+        username: auth[this.props.authLevel].user,
+        password: auth[this.props.authLevel].key
+      },
+      params: {
+        
+        ID: this.props.id,
+        name: this.props.username,
+        //weight and date are needed to specify a single post to delete; figure out how to pass along information of a row on click
+        weight: row.weight,
+        date: row.date
+      }/*,
+      data: {
+        ID: this.props.id,
+        name: this.props.username,
+        weight: this.state.weight,
+        date: this.state.date
+      }*/
+    }).then(
+      res => {
+        this.toggleEdit();
+        this.getHistory();
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   createEntry(event: any) {
@@ -192,12 +230,11 @@ class Table extends Component<TableProps, TableState> {
   returnRowData(array: any){
     //event.preventDefault();
     console.log(array);
-    console.log(this); //the 'this' inside () is pointing towards the row's array of {name, weight, date} not towards the Table class
     if (this.state.deleteMode){
       this.deleteEntry(array);
     }
     else if (this.state.editMode){
-      this.editEntry(array); //must have input boxes filled to replace the contents of array.
+      this.editEntry(array); //must have input boxes filled to replace the contents of array. implement this requirement
     }
   }
 
@@ -205,6 +242,7 @@ class Table extends Component<TableProps, TableState> {
     this.setState({
       deleteMode: !this.state.deleteMode
     });
+    
   }
 
   toggleEdit(){
