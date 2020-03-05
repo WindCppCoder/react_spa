@@ -21,16 +21,6 @@ class Main extends Component<{}, MainState> {
       id: 0
     };
   }
-  
-  storeSession = () => {
-    //const { authLevel, username, scrambled, id} = this.state;
-    localStorage.setItem('state', JSON.stringify(this.state));
-    console.log(this.state);
-    /*sessionStorage.setItem('authLevel', JSON.stringify(authLevel));
-    sessionStorage.setItem('username', authLevel === 1 ? username : '');
-    sessionStorage.setItem('scrambled', authLevel === 1 ? scrambled : '');
-    sessionStorage.setItem('id', authLevel === 1 ? JSON.stringify(id) : '');*/
-  }
 
   componentDidMount(){
     //const state = localStorage.getItem('state');
@@ -147,7 +137,6 @@ class Main extends Component<{}, MainState> {
                   callbackAuth={this.callbackForAuth}
                   callbackID={this.callbackForID}
                   callbackScram={this.callbackForScram}
-                  //storeSession={this.storeSession}
                 />
               )}
             />

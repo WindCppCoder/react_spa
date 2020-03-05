@@ -24,7 +24,6 @@ type LoginProps = {
   callbackAuth: (authLevel: number) => void;
   callbackID: (callbackID: number) => void;
   callbackScram: (scrambled: string) => void;
-  //storeSession: () => void;
   history?: any;
 };
 
@@ -76,7 +75,6 @@ class Login extends Component<LoginProps, LoginState> {
               origin.props.callbackID(origin.state.id);
               origin.props.callbackUser(origin.state.username);
               origin.props.callbackScram(origin.state.scrambled);
-              //origin.props.storeSession();
             }
           );
 
@@ -178,7 +176,6 @@ class Login extends Component<LoginProps, LoginState> {
             this.props.callbackAuth(this.state.authLevel);
             this.props.callbackID(res.data.value[0].ID);
             this.props.callbackScram(this.state.scrambled);
-            //this.props.storeSession();
           }
         );
         console.log(res.data.value);
@@ -202,7 +199,6 @@ class Login extends Component<LoginProps, LoginState> {
     this.props.callbackUser("");
     this.props.callbackScram("");
     this.props.callbackID(0);
-    //this.props.storeSession();
   }
 
   deleteAccount(event: any) {
@@ -233,7 +229,6 @@ class Login extends Component<LoginProps, LoginState> {
         this.props.callbackUser("");
         this.props.callbackID(0);
         this.props.callbackScram("");
-        //this.props.storeSession();
         this.toggleDelete();
       },
       error => {

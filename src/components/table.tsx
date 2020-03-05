@@ -54,6 +54,8 @@ class Table extends Component<TableProps, TableState> {
   }
 
   getHistory() {
+    console.log(this.props);
+    console.log(this.state);
     axios({
       method: "get",
       url: "/records/?$filter=ID eq " + this.props.id, 
