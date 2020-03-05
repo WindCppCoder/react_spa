@@ -12,6 +12,9 @@ type TableState = {
   deleteMode: boolean;
   editMode: boolean;
   weightEntry: { name: string; weight: number; date: string ; entryNum: number}[] | null;
+  username: string;
+  id: number;
+  authLevel: number;
 
 };
 
@@ -36,6 +39,9 @@ class Table extends Component<TableProps, TableState> {
       weightEntry: [
         {name: "", weight: 0, date: "", entryNum: 0}
       ],
+      username: this.props.username,
+      id: this.props.id,
+      authLevel: this.props.authLevel
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleWeightChange = this.handleWeightChange.bind(this);
@@ -53,17 +59,26 @@ class Table extends Component<TableProps, TableState> {
     this._isMounted = false;
   }
 
+  componentWillReceiveProps(prevProps:any) {
+    if (prevProps.id !== this.props.id) {
+      this.setState({
+        id: prevProps.id,
+        username: prevProps.username,
+        authLevel: prevProps.authLevel
+      }, () => 
+      this.getHistory());
+    }
+  }
+
   getHistory() {
-    console.log(this.props);
-    console.log(this.state);
     axios({
       method: "get",
-      url: "/records/?$filter=ID eq " + this.props.id, 
+      url: "/records/?$filter=ID eq " + this.state.id, 
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
-        username: auth[this.props.authLevel].user,
-        password: auth[this.props.authLevel].key
+        username: auth[this.state.authLevel].user,
+        password: auth[this.state.authLevel].key
       }
     }).then(
       res => {
@@ -73,7 +88,6 @@ class Table extends Component<TableProps, TableState> {
           });
         } else {
           var history = [];
-          console.log(res.data);
           for (let i = 0; i < res.data.value.length; i++) {
             history.push({
               name: res.data.value[i].name,
@@ -101,13 +115,13 @@ class Table extends Component<TableProps, TableState> {
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
-        username: auth[this.props.authLevel].user,
-        password: auth[this.props.authLevel].key
+        username: auth[this.state.authLevel].user,
+        password: auth[this.state.authLevel].key
       },
       params: {
         
-        ID: this.props.id,
-        name: this.props.username,
+        ID: this.state.id,
+        name: this.state.username,
         weight: row.weight,
         date: tempDate,
         entryNum: row.entryNum
@@ -129,20 +143,20 @@ class Table extends Component<TableProps, TableState> {
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
-        username: auth[this.props.authLevel].user,
-        password: auth[this.props.authLevel].key
+        username: auth[this.state.authLevel].user,
+        password: auth[this.state.authLevel].key
       },
       params: {
         
-        ID: this.props.id,
-        name: this.props.username,
+        ID: this.state.id,
+        name: this.state.username,
         weight: row.weight,
         date: row.date,
         entryNum: row.entryNum
       },
       data: {
-        ID: this.props.id,
-        name: this.props.username,
+        ID: this.state.id,
+        name: this.state.username,
         weight: this.state.weight,
         date: this.state.date
       }
@@ -164,14 +178,14 @@ class Table extends Component<TableProps, TableState> {
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
-        username: auth[this.props.authLevel].user,
-        password: auth[this.props.authLevel].key
+        username: auth[this.state.authLevel].user,
+        password: auth[this.state.authLevel].key
       },
       data: {
-        name: this.props.username,
+        name: this.state.username,
         date: this.state.date,
         weight: this.state.weight,
-        ID: this.props.id
+        ID: this.state.id
       }
     }).then(
       res => {
@@ -222,13 +236,11 @@ class Table extends Component<TableProps, TableState> {
   }
 
   returnRowData(array: any){
-    //event.preventDefault();
-    console.log(array);
     if (this.state.deleteMode){
       this.deleteEntry(array);
     }
     else if (this.state.editMode && (this.state.weight !== 0 && this.state.date !== "")){
-      this.editEntry(array); //must have input boxes filled to replace the contents of array. implement this requirement
+      this.editEntry(array);
     }
   }
 
