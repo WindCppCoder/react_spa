@@ -59,7 +59,7 @@ class Table extends Component<TableProps, TableState> {
     this._isMounted = false;
   }
 
-  componentWillReceiveProps(prevProps:any) {
+  UNSAFE_componentWillReceiveProps(prevProps:any) {
     if (prevProps.id !== this.props.id) {
       this.setState({
         id: prevProps.id,
