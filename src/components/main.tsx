@@ -23,46 +23,70 @@ class Main extends Component<{}, MainState> {
   }
   
   storeSession = () => {
-    const { authLevel, username, scrambled, id} = this.state;
-    sessionStorage.setItem('authLevel', JSON.stringify(authLevel));
+    //const { authLevel, username, scrambled, id} = this.state;
+    localStorage.setItem('state', JSON.stringify(this.state));
+    console.log(this.state);
+    /*sessionStorage.setItem('authLevel', JSON.stringify(authLevel));
     sessionStorage.setItem('username', authLevel === 1 ? username : '');
     sessionStorage.setItem('scrambled', authLevel === 1 ? scrambled : '');
-    sessionStorage.setItem('id', authLevel === 1 ? JSON.stringify(id) : '');
+    sessionStorage.setItem('id', authLevel === 1 ? JSON.stringify(id) : '');*/
   }
 
-  /*componentDidMount(){
+  componentDidMount(){
+    //const state = localStorage.getItem('state');
     const authority = sessionStorage.getItem('authLevel') === '1';
-    const username = authority ? sessionStorage.getItem('username') : '';
-    const scrambled = authority ? sessionStorage.getItem('scrambled') : '';
-    const id = authority ? sessionStorage.getItem('id') : 0;
-    const authLevel = 1;
-      this.setState({
-        authLevel, username, scrambled, id
-      });
-  }*/
+    let usernameTemp = authority ? sessionStorage.getItem('username') : "";
+    let scrambledTemp = authority ? sessionStorage.getItem('scrambled') : "";
+    let idTemp = sessionStorage.getItem('id');
+
+    console.log(this.state.authLevel);
+    let authLevel: number, id: number, username: string, scrambled: string;
+    if (!authority){
+      authLevel = 0;
+      username = "";
+      scrambled = "";
+      id = 0;
+    }
+    else {
+      authLevel = 1;
+      username = usernameTemp !== null ? usernameTemp : "";
+      scrambled = scrambledTemp !== null ? scrambledTemp : "";
+      id = idTemp !== null ? JSON.parse(idTemp) : 0;
+    }
+    this.setState({
+      authLevel: authLevel,
+      username: username,
+      scrambled: scrambled,
+      id: id
+    });
+  }
 
   callbackForUser = (username: string) => {
     this.setState({
       username: username
-    });
+    }, () =>
+    sessionStorage.setItem('username', this.state.username));
   };
 
   callbackForAuth = (authLevel: number) => {
     this.setState({
       authLevel: authLevel
-    });
+    }, () => 
+    sessionStorage.setItem('authLevel', JSON.stringify(this.state.authLevel)));
   };
 
   callbackForID = (id: number) => {
     this.setState({
       id: id
-    });
+    }, () =>
+    sessionStorage.setItem('id', JSON.stringify(this.state.id)));
   };
 
   callbackForScram = (scrambled: string) => {
     this.setState({
       scrambled: scrambled
-    });
+    }, () =>
+    sessionStorage.setItem('scrambled', this.state.scrambled));
   };
 
   render() {
@@ -123,7 +147,7 @@ class Main extends Component<{}, MainState> {
                   callbackAuth={this.callbackForAuth}
                   callbackID={this.callbackForID}
                   callbackScram={this.callbackForScram}
-                  storeSession={this.storeSession}
+                  //storeSession={this.storeSession}
                 />
               )}
             />

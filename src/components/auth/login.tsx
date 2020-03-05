@@ -24,7 +24,7 @@ type LoginProps = {
   callbackAuth: (authLevel: number) => void;
   callbackID: (callbackID: number) => void;
   callbackScram: (scrambled: string) => void;
-  storeSession: () => void;
+  //storeSession: () => void;
   history?: any;
 };
 
@@ -250,7 +250,8 @@ class Login extends Component<LoginProps, LoginState> {
   }
 
   render() {
-    if (this.props.authLevel >= 1) {
+    if (this.props.authLevel === 1) {
+      console.log(this.props);
       return (
         <div>
           <h1>

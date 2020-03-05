@@ -4,6 +4,8 @@ import axios from "axios";
 import Moment from "react-moment";
 const auth = require("../keys.json");
 
+//sessionStorage is implemented but table component must be refreshed individually to portray accurate table information
+
 type TableState = {
   weight: number;
   date: string;
@@ -54,7 +56,7 @@ class Table extends Component<TableProps, TableState> {
   getHistory() {
     axios({
       method: "get",
-      url: "/records/?$filter=ID eq " + this.props.id,
+      url: "/records/?$filter=ID eq " + this.props.id, 
       baseURL: "http://localhost:8153/api.rsc",
       withCredentials: true,
       auth: {
