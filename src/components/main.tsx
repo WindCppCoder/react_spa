@@ -29,7 +29,6 @@ class Main extends Component<{}, MainState> {
     let scrambledTemp = authority ? sessionStorage.getItem('scrambled') : "";
     let idTemp = sessionStorage.getItem('id');
 
-    console.log(this.state.authLevel);
     let authLevel: number, id: number, username: string, scrambled: string;
     if (!authority){
       authLevel = 0;

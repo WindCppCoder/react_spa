@@ -78,7 +78,7 @@ class Login extends Component<LoginProps, LoginState> {
             }
           );
 
-          console.log(res.data.value);
+          //console.log(res.data.value);
           origin.props.history.push("/");
         }
       },
@@ -178,7 +178,7 @@ class Login extends Component<LoginProps, LoginState> {
             this.props.callbackScram(this.state.scrambled);
           }
         );
-        console.log(res.data.value);
+        //console.log(res.data.value);
         this.props.history.push("/");
       },
       error => {
@@ -241,12 +241,12 @@ class Login extends Component<LoginProps, LoginState> {
     this.setState({
       showDelete: !this.state.showDelete
     });
-    console.log("I made it to handler toggleDelete");
+    //console.log("I made it to handler toggleDelete");
   }
 
   render() {
     if (this.props.authLevel === 1) {
-      console.log(this.props);
+      //console.log(this.props);
       return (
         <div>
           <h1>
